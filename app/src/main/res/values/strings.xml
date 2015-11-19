@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Whoareyou</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_action_log">Action_log</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_password_chk">Password_chk</string>
+    <string name="title_activity_front_camera_previre">frontCamera_previre</string>
+</resources>
