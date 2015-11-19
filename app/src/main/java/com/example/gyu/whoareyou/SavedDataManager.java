@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Vector;
  */
 public class SavedDataManager extends AppCompatActivity implements Serializable {
     String SaveDataDir;// = getFilesDir() + File.separator + "saved_data";
-    Vector<Action_log_Object> action_log_object = new Vector<>();
+    ArrayList<Action_log_Object> action_log_object = new ArrayList<>();
 
     //public void addData ()
 
@@ -68,9 +69,9 @@ public class SavedDataManager extends AppCompatActivity implements Serializable 
     public void loadVectorObject() {
 
         try{
-            Vector<Action_log_Object> temp;
+            ArrayList<Action_log_Object> temp;
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(getFilesDir() + File.separator + "save_data.WRY"));
-            temp = (Vector<Action_log_Object>) ois.readObject();
+            temp = (ArrayList<Action_log_Object>) ois.readObject();
             action_log_object = temp;
             ois.close();
         } catch (FileNotFoundException e){

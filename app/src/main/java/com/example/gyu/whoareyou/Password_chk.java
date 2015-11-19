@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Password_chk extends AppCompatActivity implements Serializable{
 
@@ -82,7 +82,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
     }
 
 
-    Vector<Action_log_Object> action_log_object = new Vector<>();
+    ArrayList<Action_log_Object> action_log_object = new ArrayList<>();
 
     private void savePicturePath(String path){
         Action_log_Object temp = new Action_log_Object();
@@ -103,9 +103,9 @@ public class Password_chk extends AppCompatActivity implements Serializable{
     private void loadVectorObject() {
 
         try {
-            Vector<Action_log_Object> temp;
+            ArrayList<Action_log_Object> temp;
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(getExternalFilesDir(null) + File.separator + "save_data.WRY"));
-            temp = (Vector<Action_log_Object>) ois.readObject();
+            temp = (ArrayList<Action_log_Object>) ois.readObject();
             action_log_object = temp;
             ois.close();
         } catch (FileNotFoundException e) {

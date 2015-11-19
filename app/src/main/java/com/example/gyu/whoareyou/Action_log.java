@@ -7,8 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import java.io.File;
@@ -18,10 +20,12 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Action_log extends AppCompatActivity implements Serializable{
-    Vector<Action_log_Object> action_log_object = new Vector<>();
+    ArrayList<Action_log_Object> action_log_object = new ArrayList<>();
+    ArrayAdapter<String> action_log_adapter;
+    ListView action_log_ListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +43,10 @@ public class Action_log extends AppCompatActivity implements Serializable{
 
 
         loadVectorObject();
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.action_log);
-        Button button_List[] = new Button[action_log_object.size()];
-        createButtons(button_List, layout);
+        createListView();
+        //RelativeLayout layout = (RelativeLayout) findViewById(R.id.action_log);
+        /*Button button_List[] = new Button[action_log_object.size()];
+        createButtons(button_List, layout);*/
 
     }
 
@@ -67,15 +72,29 @@ public class Action_log extends AppCompatActivity implements Serializable{
         return super.onOptionsItemSelected(item);
     }
 
+
+    private void createListView (){
+        ArrayList<String> fortest = new ArrayList<>();
+
+
+        for (int i = 0 ; i < action_log_object.size() ; i ++){
+            fortest.add(action_log_object.get(i).picture_object.get_Path());
+        }
+        action_log_adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, fortest);
+        action_log_ListView = (ListView) findViewById(R.id.listView);
+        action_log_ListView.setAdapter(action_log_adapter);
+    }
+
+
     private void createButtons(final Button[] button_List, RelativeLayout layout){
         for (int i = 0 ; i < action_log_object.size() ; i ++){
             final int button_number = i;
             button_List[i] = new Button(this);
-            button_List[i].setText(action_log_object.elementAt(i).picture_object.get_Path());
+            button_List[i].setText(action_log_object.get(i).picture_object.get_Path());
             button_List[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println(action_log_object.elementAt(button_number).picture_object.get_Path());
+                    System.out.println(action_log_object.get(button_number).picture_object.get_Path());
                 }
             });
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -106,9 +125,9 @@ public class Action_log extends AppCompatActivity implements Serializable{
     private void loadVectorObject() {
 
         try {
-            Vector<Action_log_Object> temp;
+            ArrayList<Action_log_Object> temp;
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(getExternalFilesDir(null) + File.separator + "save_data.WRY"));
-            temp = (Vector<Action_log_Object>) ois.readObject();
+            temp = (ArrayList<Action_log_Object>) ois.readObject();
             action_log_object = temp;
             ois.close();
         } catch (FileNotFoundException e) {
