@@ -54,9 +54,7 @@ public class frontCamera extends Activity implements Serializable{
                 Log.d(TAG, "File not found: " + e.getMessage());
             } catch (IOException e) {
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
-            } /*catch (InterruptedException e) {
-    e.printStackTrace();
-   }*/
+            }
         }
     };
     public void captureCamera(){
@@ -65,7 +63,7 @@ public class frontCamera extends Activity implements Serializable{
         if (checkCameraHardware(mContext)) {
             mCamera = getCameraInstance();
             mCamera.takePicture(null, null, mPicture);
-            mCamera.release();
+            //mCamera.release(); <- 여기서 바로 release하면 사진 저장이 안됨
         }
         else{
             Toast.makeText(mContext, "no camera on this device!", Toast.LENGTH_SHORT).show();
@@ -94,6 +92,7 @@ public class frontCamera extends Activity implements Serializable{
             c = Camera.open(1);
         }
         catch (Exception e){
+            System.out.println("카메라 사용 불가");
             // 사용중이거나 사용 불가능 한 경우
         }
         return c;

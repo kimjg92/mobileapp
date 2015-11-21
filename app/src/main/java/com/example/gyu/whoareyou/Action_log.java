@@ -7,11 +7,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,10 +46,6 @@ public class Action_log extends AppCompatActivity implements Serializable{
 
         loadVectorObject();
         createListView();
-        //RelativeLayout layout = (RelativeLayout) findViewById(R.id.action_log);
-        /*Button button_List[] = new Button[action_log_object.size()];
-        createButtons(button_List, layout);*/
-
     }
 
     @Override
@@ -81,8 +79,20 @@ public class Action_log extends AppCompatActivity implements Serializable{
             fortest.add(action_log_object.get(i).picture_object.get_Path());
         }
         action_log_adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, fortest);
+        AdapterView.OnItemClickListener ListViewClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,long l_position) {
+                //position 이 순번 , 위에서부터 0,1,2...
+                Intent intent = new Intent(Action_log.this,Action_log_Content.class);
+                intent.putExtra("Content", action_log_object.get(position));
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "" + position, Toast.LENGTH_SHORT).show();
+            }
+        };
+
         action_log_ListView = (ListView) findViewById(R.id.listView);
         action_log_ListView.setAdapter(action_log_adapter);
+        action_log_ListView.setOnItemClickListener(ListViewClickListener);
     }
 
 

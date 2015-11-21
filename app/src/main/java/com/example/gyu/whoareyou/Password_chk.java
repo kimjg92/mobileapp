@@ -1,6 +1,7 @@
 package com.example.gyu.whoareyou;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -21,8 +22,10 @@ import java.util.ArrayList;
 public class Password_chk extends AppCompatActivity implements Serializable{
 
 
-    int password_error_count = 0;
     frontCamera f_camera = new frontCamera(this);
+
+
+    int password_error_count = 0;
     int password_error_max = 3; // 후에 설정 값으로 수정할 것
     String my_password = "1";// 후에 설정한 비밀번호로 수정할 것
 
@@ -42,7 +45,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
                        if(password_error_max == password_error_count) {
                            f_camera.captureCamera();
                            loadVectorObject();
-                           savePicturePath(f_camera.getPath());
+                           saveInfo(f_camera.getPath());
                            saveVectorObject();
                            System.out.println("Password_chk class : action_log_object size : "+action_log_object.size());
                        }
@@ -84,9 +87,13 @@ public class Password_chk extends AppCompatActivity implements Serializable{
 
     ArrayList<Action_log_Object> action_log_object = new ArrayList<>();
 
-    private void savePicturePath(String path){
+    private void saveInfo(String path){
         Action_log_Object temp = new Action_log_Object();
         temp.picture_object.set_Path(path);
+
+        GPS gps = new GPS(this);
+        Location location = gps.getLocation();
+        temp.location_object.setLocation(location.getLatitude(), location.getLongitude());
         action_log_object.add(temp);
     }
 

@@ -38,7 +38,7 @@
             android:label="@string/title_activity_password_chk" >
         </activity>
         <activity
-            android:name=".action_log_content"
+            android:name=".Action_log_Content"
             android:label="@string/title_activity_action_log_content" >
         </activity>
         <meta-data
