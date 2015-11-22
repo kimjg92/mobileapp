@@ -9,4 +9,5 @@
     <string name="title_activity_front_camera_previre">frontCamera_previre</string>
     <string name="title_activity_action_log_content">action_log_content</string>
     <integer name="google_play_services_version">8298000</integer>
+    <string name="title_activity_new_settings">new_settings</string>
 </resources>

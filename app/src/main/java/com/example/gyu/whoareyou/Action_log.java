@@ -28,6 +28,7 @@ public class Action_log extends AppCompatActivity implements Serializable{
     ArrayList<Action_log_Object> action_log_object = new ArrayList<>();
     ArrayAdapter<String> action_log_adapter;
     ListView action_log_ListView;
+    Settings_Object settings_object;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

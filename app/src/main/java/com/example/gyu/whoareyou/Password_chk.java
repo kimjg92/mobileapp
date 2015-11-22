@@ -22,20 +22,26 @@ import java.util.ArrayList;
 public class Password_chk extends AppCompatActivity implements Serializable{
 
 
-    frontCamera f_camera = new frontCamera(this);
+    private frontCamera f_camera = new frontCamera(this);
+    private Settings_Object settings;
 
+    private int password_error_count;
+    private int password_error_max; // 후에 설정 값으로 수정할 것
+    private boolean SendEmail;
+    private String Email;
+    private String my_password;// 후에 설정한 비밀번호로 수정할 것
 
-    int password_error_count = 0;
-    int password_error_max = 3; // 후에 설정 값으로 수정할 것
-    String my_password = "1";// 후에 설정한 비밀번호로 수정할 것
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_chk);
-
         final EditText password = (EditText)findViewById(R.id.password);
+
+        password_error_count = 1;
+        getSettings();
+
         Button login = (Button)findViewById(R.id.login);
         Button.OnClickListener listener = new Button.OnClickListener() {
 
@@ -52,9 +58,9 @@ public class Password_chk extends AppCompatActivity implements Serializable{
                        if(my_password.equals(password.getText().toString())) {
                             Intent intent = new Intent(Password_chk.this, Action_log.class);
                             startActivity(intent);
-                       }
-                       else
+                       } else {
                             password_error_count++;
+                       }
                        break;
                 }
             }
@@ -84,6 +90,16 @@ public class Password_chk extends AppCompatActivity implements Serializable{
         return super.onOptionsItemSelected(item);
     }
 
+    private void getSettings (){
+        Intent intent = getIntent();
+        settings = (Settings_Object)intent.getExtras().getSerializable("Settings");
+        password_error_max = settings.getPasswordCount();
+        SendEmail = settings.getEmailEnable();
+        if(SendEmail) {
+            Email = settings.getEmail();
+        }
+        my_password = settings.getPassword();
+    }
 
     ArrayList<Action_log_Object> action_log_object = new ArrayList<>();
 
