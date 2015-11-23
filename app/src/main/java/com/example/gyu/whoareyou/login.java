@@ -24,7 +24,6 @@ public class login extends AppCompatActivity implements Serializable{
         loadSettings();
         if(settings_object != null){
             Intent intent = new Intent(login.this, Password_chk.class);
-            intent.putExtra("Settings", settings_object);
             startActivity(intent);
         } else if (settings_object == null){
             Intent intent = new Intent(login.this, new_settings.class);

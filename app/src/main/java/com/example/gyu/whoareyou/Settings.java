@@ -1,163 +1,371 @@
 package com.example.gyu.whoareyou;
 
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Settings extends AppCompatActivity implements Serializable{
 
     Settings_Object settings_object;
+    int passwordCount = -1;
     Switch Emailswitch;
+    boolean sendEmail;
+    boolean setPasswordEnable = false;
 
-    private boolean sendEmail;
-    private String Email;
-/*
+    boolean saveCondition_passwordCount = true;
+    boolean saveCondition_Email = true;
+    boolean saveCondition_crntPassword = false;
+    boolean saveCondition_Password = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        loadSettingsFromFile();
+        printSettings();
 
-        setWitchListener();
-        ///
-         - 기존 설정 내용이 있을경우 저장된 설정 객체를 불러옴. action log 액티비티 에서 버튼 클릭시 settings 객체를 불러오고 인텐트에 extra를 추가하여 넘기면 될 듯
-         - 기존 설정 내용이 없을경우(Settings_Object에 비밀번호가 없을경우) 기본 설정값을 불러옴
-         ////
-        Intent intent=getIntent();
-        settings_object = (Settings_Object)intent.getExtras().getSerializable("Settings");
-        Button apply = (Button) findViewById(R.id.Apply);
-        apply.setOnClickListener(new View.OnClickListener() {
+        setSettingsOnView();
+
+        setRadioGroupListener();
+        setSwitchListener();
+        setPasswordChangeEnableListener();
+        setApplyButtonListener();
+
+       // Intent intent=getIntent();
+       // settings_object = (Settings_Object)intent.getExtras().getSerializable("Settings");
+
+    }
+    private void setApplyButtonListener (){
+        Button Apply = (Button)findViewById(R.id.Apply);
+        Apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (settings_object == null){
-                    settings_object = new Settings_Object();
-                    //createNewSettings 호출전에 이메일이 비었는데 이메일이 enable되어있는경우 reject시키기
-                    if(createNewSettingsConditionChk()){
-                        createNewSettings();
+                //saveSettings(); // 여기안의 기능들을 모듈화 하여 스위치, 체크박스 들이 클릭되어있을때 나누어서 해야할 듯
+                //rintSettings();
+
+                if(setPasswordEnable == true){
+                    currentPasswordCheck();
+                    if(saveCondition_passwordCount && saveCondition_Email && saveCondition_Password && saveCondition_crntPassword){
+                        setPasswordCnt();
+                        setEmail();
+                        setPassword();
+                        printSettings();
+
+                        saveSettingsToFile();
+
+                        finish();
                     }
-                } else if (settings_object != null){
+                } else if (setPasswordEnable == false){
+                    if(saveCondition_passwordCount && saveCondition_Email) {
+                        setPasswordCnt();
+                        setEmail();
+                        printSettings();
 
-                } else {
+                        saveSettingsToFile();
 
+                        finish();
+                    }
                 }
+                /*currentPasswordCheck();
+                if(saveCondition_crntPassword == false){
+                    Toast.makeText(getApplication(), "current password incorrect", Toast.LENGTH_SHORT).show();
+                } else if(saveCondition_crntPassword == true){
+                    if(saveCondition_passwordCount && saveCondition_Password && saveCondition_Email && saveCondition_crntPassword) {
+                        saveSettingsToFile();
+                        //Intent intent = new Intent (Settings.this, actio);
+                        //intent.putExtra("Settings", settings_object);
+                        //startActivity(intent);
+                        finish();
+                    }
+                }*/
             }
         });
-
     }
-
-    public void createNewSettings(){
-
-
-        settings_object.setEmail(getEmail());
-        settings_object.setEmailEnable(sendEmail);
-        // settings_object.changePassword();
-
-    }
-    private String getEmail (){
-        if (sendEmail){
-            EditText EditEmail = (EditText) findViewById(R.id.setEmail);
-            return EditEmail.getText().toString();
-        } else {
-            return "";
-        }
-    }
-    private boolean EmailCheck (){
-        boolean EmailInputChk;
-        if(sendEmail == true && getEmail().equals("")){
-            EmailInputChk = false;
-            Toast.makeText(getApplication(), "Enter the Email", Toast.LENGTH_SHORT).show();
-        } else {
-            EmailInputChk = true;
-        }
-        return EmailInputChk;
-    }
-    private boolean AllPasswordEqual(){
-        if(IsNewPasswordEqual() && IsCurrentPasswordEqual()){
-            return true;
-        } else {
-            Toast.makeText(getApplication(), "Password incorrect", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-    private boolean IsCurrentPasswordEqual(){
-        if(settings_object.getCurrentPassword().equals(this.getCurrentPassword())){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    private boolean IsNewPasswordEqual(){
-        if(getNewPassword().equals(getNewPasswordChk())){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    private String getCurrentPassword(){
+    private void currentPasswordCheck(){
         EditText currentPassword = (EditText)findViewById(R.id.currrentPassword);
-        return currentPassword.getText().toString();
-    }
-    private String getNewPassword(){
-        EditText EditNewPassword = (EditText) findViewById(R.id.newPassword);
-        return EditNewPassword.getText().toString();
-    }
-    private String getNewPasswordChk(){
-        EditText EditNewPasswordChk = (EditText) findViewById(R.id.newPasswordChk);
-        return EditNewPasswordChk.getText().toString();
-    }
-    private void setWitchListener (){
-        Emailswitch = (Switch) findViewById(R.id.EmailSwitch);
-        Emailswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    sendEmail = true;
-                    Toast.makeText(getApplication(), "Send Email Enabled", Toast.LENGTH_SHORT).show();
-                } else {
-                    sendEmail = false;
-                    Toast.makeText(getApplication(),"Send Email Disabled", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-    }
-///////
-    private void setEmail (){
-        if(SendEmail == true) {
-            EditText EditEmail = (EditText) findViewById(R.id.setEmail);
-            Email = EditEmail.getText().toString();
+        String crntPassword = currentPassword.getText().toString();
+        if(settings_object.getPassword().toString().equals(crntPassword)){
+            saveCondition_crntPassword = true;
         } else {
-            Email = "null";
+            saveCondition_crntPassword = false;
+            Toast.makeText(getApplication(), "current Password incorrect", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void loadSettingsFromFile() {
+        try {
+            Settings_Object temp;
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(getExternalFilesDir(null) + File.separator + "settings.WRY"));
+            temp = (Settings_Object)ois.readObject();
+            settings_object = temp;
+            ois.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Password_chk Class - loadVectorObject Method : FileNotFoundException, create File (call CreateSaveData Method)");
+
+        } catch (Exception e) {
+            System.out.println("Password_chk Class - loadVectorObject Method : Exception, print Stack Trace");
+            e.printStackTrace();
         }
     }
 
-    private void setWitchListener (){
-        Emailswitch = (Switch) findViewById(R.id.EmailSwitch);
-        Emailswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    SendEmail = true;
-                    Toast.makeText(getApplication(), "Send Email Enabled", Toast.LENGTH_SHORT).show();
-                } else {
-                    SendEmail = false;
-                    Toast.makeText(getApplication(),"Send Email Disabled", Toast.LENGTH_SHORT).show();
-                }
+    private void setSettingsOnView(){
+        passwordCountMark();
+        passwordCount = settings_object.getPasswordCount();
+        sendEmailSwitchMark();
+        sendEmail = settings_object.getEmailEnable();
+        setEmailMark();
+        EditText currentPassword = (EditText)findViewById(R.id.currrentPassword);
+        EditText newPassword = (EditText)findViewById(R.id.newPassword);
+        EditText newPasswordChk = (EditText)findViewById(R.id.newPasswordChk);
+        currentPassword.setEnabled(false);
+        newPassword.setEnabled(false);
+        newPasswordChk.setEnabled(false);
+    }
 
-            }
-        });
+    private void passwordCountMark(){
+        RadioButton PasswordOption1 = (RadioButton)findViewById(R.id.PasswordOption1);
+        RadioButton PasswordOption2 = (RadioButton)findViewById(R.id.PasswordOption2);
+        RadioButton PasswordOption3 = (RadioButton)findViewById(R.id.PasswordOption3);
+        RadioButton PasswordOption4 = (RadioButton)findViewById(R.id.PasswordOption4);
+
+        switch (settings_object.getPasswordCount()){
+            case 1 :
+                PasswordOption1.setChecked(true);
+                settings_object.setPasswordCount(1);
+                break;
+            case 2:
+                PasswordOption2.setChecked(true);
+                settings_object.setPasswordCount(2);
+                break;
+            case 3:
+                PasswordOption3.setChecked(true);
+                settings_object.setPasswordCount(3);
+                break;
+            case 4:
+                PasswordOption4.setChecked(true);
+                settings_object.setPasswordCount(4);
+                break;
+        }
+    }
+
+    private void sendEmailSwitchMark () {
+        Switch EmailSwitch = (Switch)findViewById(R.id.EmailSwitch);
+        EditText setEmail = (EditText)findViewById(R.id.setEmail);
+        if(settings_object.getEmailEnable() == true) {
+            EmailSwitch.setChecked(true);
+            setEmail.setEnabled(true);
+        } else if (settings_object.getEmailEnable() == false){
+            EmailSwitch.setChecked(false);
+            setEmail.setEnabled(false);
+        }
+
+    }
+
+    private void setEmailMark (){
+        EditText setEmail = (EditText)findViewById(R.id.setEmail);
+        setEmail.setText(settings_object.getEmail());
+    }
+
+
+    private void printSettings(){
+        System.out.println("Password Count : " + settings_object.getPasswordCount());
+        System.out.println("Email : " + settings_object.getEmail());
+        System.out.println("Email Send Enable : " + settings_object.getEmailEnable());
+        System.out.println("Password : " + settings_object.getPassword());
+        System.out.println("New Password : " + getNewPassword());
+        System.out.println("New Password Check : " + getNewPasswordChk());
+        System.out.println("Save Condition Password Count : " + saveCondition_passwordCount);
+        System.out.println("Save Condition Email : " + saveCondition_Email);
+        System.out.println("Save Condition crntPassword : " + saveCondition_crntPassword);
+        System.out.println("Save Condition newPassword : " + saveCondition_Password);
+
+
     }
 
     private void saveSettings(){
+        //settings_object = new Settings_Object();
+
+        //setPasswordcnt
+        setPasswordCnt();
+
+        //setEmail
+        setEmail();
+
+        //setPassword
+        setPassword();
+
+    }
+    private void setPassword(){
+        if(!getNewPassword().toString().equals("") && !getNewPasswordChk().toString().equals("")) {
+            if (isNewPasswordEqual()) {
+                settings_object.setPassword(getNewPassword());
+                saveCondition_Password = true;
+            } else {
+                Toast.makeText(getApplication(), "new Password is not Equal", Toast.LENGTH_SHORT).show();
+                saveCondition_Password = false;
+            }
+        } else {
+            Toast.makeText(getApplication(), "Enter the Password", Toast.LENGTH_SHORT).show();
+            saveCondition_Password = false;
+        }
+    }
+
+    private void setEmail(){
+        settings_object.setEmailEnable(sendEmail);
+        if(isEmailValid()) {
+            settings_object.setEmail(getEmail());
+            saveCondition_Email = true;
+        } else {
+            saveCondition_Email = false;
+        }
+    }
+
+    private void setPasswordCnt(){
+        if (passwordCount == -1){
+            Toast.makeText(getApplication(), "Click the Password Count", Toast.LENGTH_SHORT).show();
+            saveCondition_passwordCount = false;
+        } else {
+            settings_object.setPasswordCount(passwordCount);
+            saveCondition_passwordCount = true;
+        }
+    }
+
+    private String getEmail(){
+        EditText editText = (EditText) findViewById(R.id.setEmail);
+        return editText.getText().toString();
+    }
+
+    private Boolean isEmailValid(){
+        if(sendEmail == true && getEmail().toString().equals("")){
+            //Toast.makeText(getApplication(), "Email check Condition 1", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (sendEmail == true && !getEmail().toString().equals("")){
+            // Toast.makeText(getApplication(), "Email check Condition 2", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (sendEmail == false && !getEmail().toString().equals("")){
+            // Toast.makeText(getApplication(), "Email check Condition 3", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (sendEmail == false && getEmail().toString().equals("")){
+            //  Toast.makeText(getApplication(), "Email check Condition 4", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        Toast.makeText(getApplication(), "Email check error", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    private String getCurrentPassword(){
+        EditText editText = (EditText)findViewById(R.id.currrentPassword);
+        return editText.getText().toString();
+    }
+
+    private String getNewPassword(){
+        EditText editText = (EditText)findViewById(R.id.newPassword);
+        return editText.getText().toString();
+    }
+
+    private String getNewPasswordChk(){
+        EditText editText = (EditText)findViewById(R.id.newPasswordChk);
+        return editText.getText().toString();
+    }
+
+    private boolean isNewPasswordEqual(){
+        return getNewPassword().equals(getNewPasswordChk());
+    }
+
+    private void saveSettingsToFile(){
         try{
             ObjectOutputStream oos =new ObjectOutputStream(new FileOutputStream(getExternalFilesDir(null) + File.separator + "settings.WRY"));
             oos.writeObject(settings_object);
             oos.close();
+            System.out.println("new_Settings Class - saveSettingsToFile method call : Save Setting to File Success");
         } catch (Exception e) {
-            System.out.println("Settings Class - saveSettings method call : Exception");
+            System.out.println("new Settings Class - saveSettingsToFile method call : Exception");
         }
     }
-/////
+    private void setSwitchListener (){
+        Emailswitch = (Switch) findViewById(R.id.EmailSwitch);
+        Emailswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EditText setEmail = (EditText)findViewById(R.id.setEmail);
+                if (isChecked) {
+                    sendEmail = true;
+                    setEmail.setEnabled(true);
+                    Toast.makeText(getApplication(), "Send Email Enabled " + sendEmail, Toast.LENGTH_SHORT).show();
+                } else {
+                    sendEmail = false;
+                    setEmail.setEnabled(false);
+                    Toast.makeText(getApplication(), "Send Email Disabled " + sendEmail, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+    private void setRadioGroupListener (){
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.PasswordOption1:
+                        passwordCount = 1;
+                        break;
+
+                    case R.id.PasswordOption2:
+                        passwordCount = 2;
+                        break;
+
+                    case R.id.PasswordOption3:
+                        passwordCount = 3;
+                        break;
+
+                    case R.id.PasswordOption4:
+                        passwordCount = 4;
+                        break;
+                }
+            }
+        });
+    }
+
+    private void setPasswordChangeEnableListener() {
+        final CheckBox passwordSettingEnable = (CheckBox) findViewById(R.id.passwordSettingEnable);
+        passwordSettingEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EditText currentPassword = (EditText)findViewById(R.id.currrentPassword);
+                EditText newPassword = (EditText)findViewById(R.id.newPassword);
+                EditText newPasswordChk = (EditText)findViewById(R.id.newPasswordChk);
+                if (isChecked == true) {
+                    setPasswordEnable = true;
+                    currentPassword.setEnabled(true);
+                    newPassword.setEnabled(true);
+                    newPasswordChk.setEnabled(true);
+                } else {
+                    setPasswordEnable = false;
+                    currentPassword.setEnabled(false);
+                    newPassword.setEnabled(false);
+                    newPasswordChk.setEnabled(false);
+                }
+            }
+        });
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -180,5 +388,5 @@ public class Settings extends AppCompatActivity implements Serializable{
         return super.onOptionsItemSelected(item);
     }
 
-*/
+
 }

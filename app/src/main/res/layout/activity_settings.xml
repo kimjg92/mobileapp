@@ -171,4 +171,23 @@
         android:layout_toRightOf="@+id/NPSWCHKtxtView"
         android:layout_toEndOf="@+id/NPSWCHKtxtView" />
 
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="426dp"
+        android:layout_marginStart="426dp"
+        android:layout_marginTop="58dp"
+        android:id="@+id/tableRow"></TableRow>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/passwordSettingEnable"
+        android:layout_below="@+id/setEmail"
+        android:layout_alignLeft="@+id/EmailSwitch"
+        android:layout_alignStart="@+id/EmailSwitch" />
+
 </RelativeLayout>

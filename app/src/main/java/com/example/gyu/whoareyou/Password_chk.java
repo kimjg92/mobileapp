@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,7 +41,14 @@ public class Password_chk extends AppCompatActivity implements Serializable{
         final EditText password = (EditText)findViewById(R.id.password);
 
         password_error_count = 1;
+
+        loadSettingsFromFile();
         getSettings();
+
+        ///////////////////////////////////
+        TextView settingPassword = (TextView)findViewById(R.id.showCurrentPassword);
+        settingPassword.setText(my_password);
+        //////////////////////////////////
 
         Button login = (Button)findViewById(R.id.login);
         Button.OnClickListener listener = new Button.OnClickListener() {
@@ -53,6 +61,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
                            loadVectorObject();
                            saveInfo(f_camera.getPath());
                            saveVectorObject();
+                           password_error_count = 1;
                            System.out.println("Password_chk class : action_log_object size : "+action_log_object.size());
                        }
                        if(my_password.equals(password.getText().toString())) {
@@ -90,9 +99,24 @@ public class Password_chk extends AppCompatActivity implements Serializable{
         return super.onOptionsItemSelected(item);
     }
 
-    private void getSettings (){
-        Intent intent = getIntent();
-        settings = (Settings_Object)intent.getExtras().getSerializable("Settings");
+    private void loadSettingsFromFile() {
+        try {
+            Settings_Object temp;
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(getExternalFilesDir(null) + File.separator + "settings.WRY"));
+            temp = (Settings_Object)ois.readObject();
+            settings = temp;
+            ois.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Password_chk Class - loadVectorObject Method : FileNotFoundException, create File (call CreateSaveData Method)");
+
+        } catch (Exception e) {
+            System.out.println("Password_chk Class - loadVectorObject Method : Exception, print Stack Trace");
+            e.printStackTrace();
+        }
+    }
+   private void getSettings (){
+       // Intent intent = getIntent();
+       // settings = (Settings_Object)intent.getExtras().getSerializable("Settings");
         password_error_max = settings.getPasswordCount();
         SendEmail = settings.getEmailEnable();
         if(SendEmail) {

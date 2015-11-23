@@ -35,7 +35,6 @@ public class new_settings extends AppCompatActivity implements Serializable {
         setSwitchListener();
         setRadioGroupListener();
         setApplyButtonListener();
-
     }
 
     private void setApplyButtonListener (){
