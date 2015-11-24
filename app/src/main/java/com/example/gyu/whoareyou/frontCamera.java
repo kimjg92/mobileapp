@@ -62,6 +62,7 @@ public class frontCamera extends Activity implements Serializable{
         // 카메라 인스턴스 생성
         if (checkCameraHardware(mContext)) {
             mCamera = getCameraInstance();
+            System.out.println(mPicture);
             mCamera.takePicture(null, null, mPicture);
             //mCamera.release(); <- 여기서 바로 release하면 사진 저장이 안됨
         }
@@ -90,9 +91,10 @@ public class frontCamera extends Activity implements Serializable{
         Camera c = null;
         try {
             c = Camera.open(1);
+            System.out.println("카메라 사용 가능 return : " + c);
         }
         catch (Exception e){
-            System.out.println("카메라 사용 불가");
+            System.out.println("카메라 사용 불가 return : " + c);
             // 사용중이거나 사용 불가능 한 경우
         }
         return c;
@@ -155,5 +157,12 @@ public class frontCamera extends Activity implements Serializable{
         super.onDestroy();
         mCamera.release();
         mCamera=null;
+    }
+
+    public void releaseCamera(){
+        if(mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
     }
 }

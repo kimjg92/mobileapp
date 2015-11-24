@@ -1,8 +1,11 @@
 package com.example.gyu.whoareyou;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,21 +59,22 @@ public class Password_chk extends AppCompatActivity implements Serializable{
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.login:
-                       if(password_error_max == password_error_count) {
-                           f_camera.captureCamera();
-                           loadVectorObject();
-                           saveInfo(f_camera.getPath());
-                           saveVectorObject();
-                           password_error_count = 1;
-                           System.out.println("Password_chk class : action_log_object size : "+action_log_object.size());
-                       }
-                       if(my_password.equals(password.getText().toString())) {
+                        if(password_error_max == password_error_count) {
+                            f_camera.captureCamera();
+                            loadVectorObject();
+                            saveInfo(f_camera.getPath());
+                            saveVectorObject();
+                            //password_error_count = 1;<- 계속틀리는경우 계속 카메라 촬영을 할것인가?
+                            System.out.println("Password_chk class : action_log_object size : "+action_log_object.size());
+                            sendGmail(f_camera.getPath());
+                        }
+                        if(my_password.equals(password.getText().toString())) {
                             Intent intent = new Intent(Password_chk.this, Action_log.class);
                             startActivity(intent);
-                       } else {
+                        } else {
                             password_error_count++;
-                       }
-                       break;
+                        }
+                        break;
                 }
             }
         };
@@ -99,6 +103,35 @@ public class Password_chk extends AppCompatActivity implements Serializable{
         return super.onOptionsItemSelected(item);
     }
 
+    private void sendGmail( String filePath ){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        GMailSender sender = new GMailSender("kimjdms", "kiki3301"); // 설정파일에서 불러오기로 고치기
+        System.out.println("지메일 센더 실행");
+
+        GPS gps = new GPS(this);
+        Location location = gps.getLocation();
+
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        String mailContent = "위치정보 : https://www.google.com/maps?q="+lat+","+lng+"&hl=ko&gl=kr&shorturl=1";
+
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+        File file = new File (filePath);
+
+
+        System.out.println("sendGmail Method - get File : " + file);
+        try {
+            sender.sendMail("Who Are You", mailContent, "kimjdms@mgmail.com", "kim_jg92@naver.com", file);
+
+            System.out.println("메일 센더 호출");
+        } catch (Exception e) {
+            System.out.println("오류 파일을 찾을 수 없음 : " + file);
+            e.printStackTrace();
+        }
+
+    }
     private void loadSettingsFromFile() {
         try {
             Settings_Object temp;
@@ -114,9 +147,9 @@ public class Password_chk extends AppCompatActivity implements Serializable{
             e.printStackTrace();
         }
     }
-   private void getSettings (){
-       // Intent intent = getIntent();
-       // settings = (Settings_Object)intent.getExtras().getSerializable("Settings");
+    private void getSettings (){
+        // Intent intent = getIntent();
+        // settings = (Settings_Object)intent.getExtras().getSerializable("Settings");
         password_error_max = settings.getPasswordCount();
         SendEmail = settings.getEmailEnable();
         if(SendEmail) {
@@ -173,4 +206,30 @@ public class Password_chk extends AppCompatActivity implements Serializable{
             System.out.println("Password_chk Class - createSaveData Method : Exception");
         }
     }
+    @Override
+    public void onPause(){
+        super.onPause();
+        // 보통 안쓰는 객체는 onDestroy에서 해제 되지만 카메라는 확실히 제거해주는게 안전하다.
+        if(f_camera != null){
+            f_camera.releaseCamera();
+            f_camera = null;
+        }
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(f_camera != null){
+            f_camera.releaseCamera();
+            f_camera = null;
+        }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(f_camera != null){
+            f_camera.releaseCamera();
+            f_camera = null;
+        }
+    }
+
 }
