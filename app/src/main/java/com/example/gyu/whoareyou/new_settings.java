@@ -48,6 +48,8 @@ public class new_settings extends AppCompatActivity implements Serializable {
                     saveSettingsToFile();
                     Intent intent = new Intent (new_settings.this, Password_chk.class);
                     intent.putExtra("Settings", settings_object);
+                    Intent service = new Intent(new_settings.this, ScreenService.class);
+                    startService(service);
                     startActivity(intent);
                 }
             }
@@ -67,6 +69,8 @@ public class new_settings extends AppCompatActivity implements Serializable {
 
     private void saveSettings(){
         settings_object = new Settings_Object();
+        //set Use App
+        settings_object.setUseApp(true);
 
         //setPasswordcnt
         if (passwordCount == -1){

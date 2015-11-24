@@ -1,6 +1,5 @@
 package com.example.gyu.whoareyou;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -23,10 +22,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Password_chk extends AppCompatActivity implements Serializable{
+/**
+ * Created by GYU on 2015-11-25.
+ */
+public class ScreenLock extends AppCompatActivity implements Serializable{
 
-
-    private frontCamera f_camera;// = new frontCamera(this);
+    private frontCamera f_camera;
     private Settings_Object settings;
 
     private int password_error_count;
@@ -45,6 +46,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
 
         password_error_count = 1;
 
+
         loadSettingsFromFile();
         getSettings();
 
@@ -60,7 +62,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
                 switch (v.getId()) {
                     case R.id.login:
                         if(password_error_max == password_error_count) {
-                            f_camera  = new frontCamera(Password_chk.this);
+                            f_camera  = new frontCamera(ScreenLock.this);
                             f_camera.captureCamera();
                             loadVectorObject();
                             saveInfo(f_camera.getPath());
@@ -70,8 +72,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
                             sendGmail(f_camera.getPath());
                         }
                         if(my_password.equals(password.getText().toString())) {
-                            Intent intent = new Intent(Password_chk.this, Action_log.class);
-                            startActivity(intent);
+                            finish();
                         } else {
                             password_error_count++;
                         }
@@ -232,5 +233,4 @@ public class Password_chk extends AppCompatActivity implements Serializable{
             f_camera = null;
         }
     }
-
 }

@@ -190,4 +190,23 @@
         android:layout_alignLeft="@+id/EmailSwitch"
         android:layout_alignStart="@+id/EmailSwitch" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Who Are You 사용"
+        android:id="@+id/textView"
+        android:layout_below="@+id/Apply"
+        android:layout_marginTop="49dp"
+        android:layout_alignRight="@+id/passwordSetting"
+        android:layout_alignEnd="@+id/passwordSetting" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/useApp"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_alignRight="@+id/newPasswordChk"
+        android:layout_alignEnd="@+id/newPasswordChk" />
+
 </RelativeLayout>

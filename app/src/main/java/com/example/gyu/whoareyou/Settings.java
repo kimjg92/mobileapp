@@ -1,5 +1,6 @@
 package com.example.gyu.whoareyou;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -27,6 +28,7 @@ public class Settings extends AppCompatActivity implements Serializable{
     Settings_Object settings_object;
     int passwordCount = -1;
     Switch Emailswitch;
+    boolean ActivateApp;
     boolean sendEmail;
     boolean setPasswordEnable = false;
 
@@ -44,6 +46,7 @@ public class Settings extends AppCompatActivity implements Serializable{
 
         setSettingsOnView();
 
+        setActivateApplicationSwitchListener();
         setRadioGroupListener();
         setSwitchListener();
         setPasswordChangeEnableListener();
@@ -51,6 +54,44 @@ public class Settings extends AppCompatActivity implements Serializable{
 
        // Intent intent=getIntent();
        // settings_object = (Settings_Object)intent.getExtras().getSerializable("Settings");
+
+    }
+    private void ActivateApplication(){
+        if(ActivateApp == true){
+            settings_object.setUseApp(ActivateApp);
+            Intent intent = new Intent(Settings.this, ScreenService.class);
+            startService(intent);
+        } else if(ActivateApp == false){
+            settings_object.setUseApp(ActivateApp);
+            Intent intent = new Intent(Settings.this, ScreenService.class);
+            stopService(intent);
+        }
+    }
+    private void setActivateApplicationSwitchListener(){
+        final Switch ActivateAppSwitch = (Switch)findViewById(R.id.useApp);
+        ActivateAppSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    ActivateApp = true;
+                    //setEmail.setEnabled(true);
+                    Toast.makeText(getApplication(), "Application Enabled " , Toast.LENGTH_SHORT).show();
+                } else {
+                    ActivateApp = false;
+                    //setEmail.setEnabled(false);
+                    Toast.makeText(getApplication(), "Application Disabled ", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+    private void setActivateAppSwitchMark () {
+        Switch ActivateAppSwitch = (Switch)findViewById(R.id.useApp);
+        if(settings_object.getUseApp()  == true) {
+            ActivateAppSwitch.setChecked(true);
+        } else if (settings_object.getUseApp() == false){
+            ActivateAppSwitch.setChecked(false);
+        }
 
     }
     private void setApplyButtonListener (){
@@ -64,6 +105,8 @@ public class Settings extends AppCompatActivity implements Serializable{
                 if(setPasswordEnable == true){
                     currentPasswordCheck();
                     if(saveCondition_passwordCount && saveCondition_Email && saveCondition_Password && saveCondition_crntPassword){
+                        //setActivateApplication();
+                        ActivateApplication();
                         setPasswordCnt();
                         setEmail();
                         setPassword();
@@ -75,6 +118,8 @@ public class Settings extends AppCompatActivity implements Serializable{
                     }
                 } else if (setPasswordEnable == false){
                     if(saveCondition_passwordCount && saveCondition_Email) {
+                        //setActivateApplication();
+                        ActivateApplication();
                         setPasswordCnt();
                         setEmail();
                         printSettings();
@@ -131,6 +176,9 @@ public class Settings extends AppCompatActivity implements Serializable{
         sendEmailSwitchMark();
         sendEmail = settings_object.getEmailEnable();
         setEmailMark();
+        setActivateAppSwitchMark();
+        ActivateApp = settings_object.getUseApp();
+
         EditText currentPassword = (EditText)findViewById(R.id.currrentPassword);
         EditText newPassword = (EditText)findViewById(R.id.newPassword);
         EditText newPasswordChk = (EditText)findViewById(R.id.newPasswordChk);
@@ -185,6 +233,7 @@ public class Settings extends AppCompatActivity implements Serializable{
 
 
     private void printSettings(){
+        System.out.println("Activation App : " + settings_object.getUseApp());
         System.out.println("Password Count : " + settings_object.getPasswordCount());
         System.out.println("Email : " + settings_object.getEmail());
         System.out.println("Email Send Enable : " + settings_object.getEmailEnable());

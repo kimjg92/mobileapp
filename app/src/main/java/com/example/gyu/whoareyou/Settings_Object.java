@@ -6,11 +6,18 @@ import java.io.Serializable;
  * Created by GYU on 2015-11-22.
  */
 public class Settings_Object implements Serializable{
+    private boolean useApp;
     private int PasswordCount;
     private String Email;
     private boolean SendEmail;
     private String Password;
 
+    public void setUseApp (boolean use){
+        useApp = use;
+    }
+    public boolean getUseApp(){
+        return useApp;
+    }
 
     public void setPasswordCount (int count){
         PasswordCount = count;
