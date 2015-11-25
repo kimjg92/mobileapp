@@ -1,11 +1,12 @@
 package com.example.gyu.whoareyou;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.database.Cursor;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +35,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
     private boolean SendEmail;
     private String Email;
     private String my_password;// 후에 설정한 비밀번호로 수정할 것
-
+    private String filePath;
 
 
     @Override
@@ -42,6 +43,17 @@ public class Password_chk extends AppCompatActivity implements Serializable{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_chk);
         final EditText password = (EditText)findViewById(R.id.password);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //////////////////////////////
+        //이전 인텐트에서 파일 경로 받아와 메일 보내는 부분
+        filePath = getIntent().getStringExtra("Path");
+        if(!filePath.equals("null")){
+            sendGmail(filePath);
+        }
+        ////////////////////////////////
+
 
         password_error_count = 1;
 
@@ -67,10 +79,14 @@ public class Password_chk extends AppCompatActivity implements Serializable{
                             saveVectorObject();
                             //password_error_count = 1;<- 계속틀리는경우 계속 카메라 촬영을 할것인가?
                             System.out.println("Password_chk class : action_log_object size : "+action_log_object.size());
-                            sendGmail(f_camera.getPath());
+                            //sendGmail(f_camera.getPath());
+                            Intent intent =new Intent(Password_chk.this, Password_chk.class);
+                            intent.putExtra("Path", f_camera.getPath());
+                            startActivity(intent);
                         }
                         if(my_password.equals(password.getText().toString())) {
                             Intent intent = new Intent(Password_chk.this, Action_log.class);
+                            //intent.putExtra("Path",f_camera.getPath()); <- 인텐트로 파일 경로 넘겨서 다른 액티비티에서 전송하면 잘됨
                             startActivity(intent);
                         } else {
                             password_error_count++;
@@ -104,9 +120,8 @@ public class Password_chk extends AppCompatActivity implements Serializable{
         return super.onOptionsItemSelected(item);
     }
 
-    private void sendGmail( String filePath ){
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+    private void sendGmail(String filePath ){
+
 
         GMailSender sender = new GMailSender("kimjdms", "kiki3301"); // 설정파일에서 불러오기로 고치기
         System.out.println("지메일 센더 실행");
@@ -118,11 +133,26 @@ public class Password_chk extends AppCompatActivity implements Serializable{
         double lng = location.getLongitude();
         String mailContent = "위치정보 : https://www.google.com/maps?q="+lat+","+lng+"&hl=ko&gl=kr&shorturl=1";
 
-        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-        File file = new File (filePath);
+       /////////////////////////////////////////////////////////////////////////////////////
 
 
-        System.out.println("sendGmail Method - get File : " + file);
+/*            String[] proj = { MediaStore.Images.Media.DATA };
+            Cursor cursor = managedQuery(filePath, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String testPath = cursor.getString(column_index);
+
+*/
+        /////////////////////////////////
+        try {
+            FileInputStream ois  = new FileInputStream(filePath);
+            //dFile file = ois.read();
+            ois.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        File file = new File(filePath);//getOutputMediaFile(filePath);
         try {
             sender.sendMail("Who Are You", mailContent, "kimjdms@mgmail.com", "kim_jg92@naver.com", file);
 
@@ -131,7 +161,47 @@ public class Password_chk extends AppCompatActivity implements Serializable{
             System.out.println("오류 파일을 찾을 수 없음 : " + file);
             e.printStackTrace();
         }
+        /*if(file.exists() == false){
+            System.out.println ("파일 없음");
+        } else {
 
+        }*/
+
+        //Bitmap img = BitmapFactory.decodeFile(testPath);
+        //ImageView test = (ImageView)findViewById(R.id.imageViewTest);
+        //test.setImageBitmap(img);
+
+        //System.out.println("sendGmail Method - get File : " + testPath);
+        ///////////////////////////////////////////////////////////
+       // img.pat
+        //file = new File(file.toURI());
+        //iv.setImageBitmap(BitmapFactory.decodeFile(filePath));//여기서 오류나느거 보니 String으로 보내면안되나봄
+        //whoareyou E/BitmapFactory﹕ Unable to decode stream: java.io.FileNotFoundException: /storage/emulated/0/Pictures/MyCameraApp/IMG_20151124_134227.jpg: open failed: ENOENT (No such file or directory
+        //http://stackoverflow.com/questions/24524809/bitmapfactory-decodefile-filenotfoundexception
+        //이 방법으로 해볼 것
+        //System.out.println("sendGmail Method - get File : " + file);
+
+
+    }
+    ////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////
+
+
+
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
     private void loadSettingsFromFile() {
         try {
@@ -169,6 +239,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
         Location location = gps.getLocation();
         temp.location_object.setLocation(location.getLatitude(), location.getLongitude());
         action_log_object.add(temp);
+
     }
 
     private void saveVectorObject(){
@@ -215,6 +286,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
             f_camera.releaseCamera();
             f_camera = null;
         }
+        finish();
     }
     @Override
     public void onStop() {

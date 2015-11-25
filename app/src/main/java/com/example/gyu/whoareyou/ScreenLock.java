@@ -1,5 +1,6 @@
 package com.example.gyu.whoareyou;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -35,7 +36,7 @@ public class ScreenLock extends AppCompatActivity implements Serializable{
     private boolean SendEmail;
     private String Email;
     private String my_password;// 후에 설정한 비밀번호로 수정할 것
-
+    private String filePath;
 
 
     @Override
@@ -43,6 +44,20 @@ public class ScreenLock extends AppCompatActivity implements Serializable{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_chk);
         final EditText password = (EditText)findViewById(R.id.password);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //////////////////////////////
+        //이전 인텐트에서 파일 경로 받아와 메일 보내는 부분
+        filePath = getIntent().getStringExtra("Path");
+        if(filePath != null) {
+            if (!filePath.equals("null")) {
+                sendGmail(filePath);
+            }
+        }
+        ////////////////////////////////
+
+
 
         password_error_count = 1;
 
@@ -68,8 +83,11 @@ public class ScreenLock extends AppCompatActivity implements Serializable{
                             saveInfo(f_camera.getPath());
                             saveVectorObject();
                             //password_error_count = 1;<- 계속틀리는경우 계속 카메라 촬영을 할것인가?
-                            System.out.println("Password_chk class : action_log_object size : "+action_log_object.size());
-                            sendGmail(f_camera.getPath());
+                            System.out.println("Password_chk class : action_log_object size : " + action_log_object.size());
+                            Intent intent = new Intent(ScreenLock.this , ScreenLock.class);
+                            intent.putExtra("Path", f_camera.getPath());
+                            startActivity(intent);
+                            //sendGmail(f_camera.getPath());
                         }
                         if(my_password.equals(password.getText().toString())) {
                             finish();

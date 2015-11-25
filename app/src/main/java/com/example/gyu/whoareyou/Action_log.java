@@ -1,6 +1,7 @@
 package com.example.gyu.whoareyou;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -47,6 +48,71 @@ public class Action_log extends AppCompatActivity implements Serializable{
 
         loadVectorObject();
         createListView();
+        //String Path = getIntent().getStringExtra("Path");
+        //sendGmail(Path);  <- 다른 액티비티에서 파일경로를 인텐트로 받아와서 보낸느건 잘됨.
+    }
+    private void sendGmail(String filePath ){
+
+
+        GMailSender sender = new GMailSender("kimjdms", "kiki3301"); // 설정파일에서 불러오기로 고치기
+        System.out.println("지메일 센더 실행");
+
+        GPS gps = new GPS(this);
+        Location location = gps.getLocation();
+
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        String mailContent = "위치정보 : https://www.google.com/maps?q="+lat+","+lng+"&hl=ko&gl=kr&shorturl=1";
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+
+/*            String[] proj = { MediaStore.Images.Media.DATA };
+            Cursor cursor = managedQuery(filePath, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String testPath = cursor.getString(column_index);
+
+*/
+        /////////////////////////////////
+        try {
+            FileInputStream ois  = new FileInputStream(filePath);
+            //dFile file = ois.read();
+            ois.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        File file = new File(filePath);//getOutputMediaFile(filePath);
+        try {
+            sender.sendMail("Who Are You", mailContent, "kimjdms@mgmail.com", "kim_jg92@naver.com", file);
+
+            System.out.println("메일 센더 호출");
+        } catch (Exception e) {
+            System.out.println("오류 파일을 찾을 수 없음 : " + file);
+            e.printStackTrace();
+        }
+        /*if(file.exists() == false){
+            System.out.println ("파일 없음");
+        } else {
+
+        }*/
+
+        //Bitmap img = BitmapFactory.decodeFile(testPath);
+        //ImageView test = (ImageView)findViewById(R.id.imageViewTest);
+        //test.setImageBitmap(img);
+
+        //System.out.println("sendGmail Method - get File : " + testPath);
+        ///////////////////////////////////////////////////////////
+        // img.pat
+        //file = new File(file.toURI());
+        //iv.setImageBitmap(BitmapFactory.decodeFile(filePath));//여기서 오류나느거 보니 String으로 보내면안되나봄
+        //whoareyou E/BitmapFactory﹕ Unable to decode stream: java.io.FileNotFoundException: /storage/emulated/0/Pictures/MyCameraApp/IMG_20151124_134227.jpg: open failed: ENOENT (No such file or directory
+        //http://stackoverflow.com/questions/24524809/bitmapfactory-decodefile-filenotfoundexception
+        //이 방법으로 해볼 것
+        //System.out.println("sendGmail Method - get File : " + file);
+
+
     }
 
     @Override

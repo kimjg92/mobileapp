@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,11 +25,15 @@ public class frontCamera extends Activity implements Serializable{
     private Context mContext;
     private Camera mCamera;
     private String Picture_path;
+    private String Picture_name;
+    private Uri Picture_Uri;
     public frontCamera (Context cont){
         mContext = cont;
         // 파일명을 적당히 생성. 여기선 시간으로 파일명 중복을 피한다.
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Picture_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/MyCameraApp/IMG_"+timeStamp+".jpg"; // 파일 경로 및 파일 명의 기본값
+        Picture_Uri = Uri.parse(Picture_path);
+        Picture_name = "IMG_"+timeStamp+".jpg";
     }
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
@@ -57,6 +62,9 @@ public class frontCamera extends Activity implements Serializable{
             }
         }
     };
+    public String getPicture_name(){
+        return Picture_name;
+    }
     public void captureCamera(){
         //mContext = this;
         // 카메라 인스턴스 생성
@@ -122,6 +130,7 @@ public class frontCamera extends Activity implements Serializable{
         File mediaFile;
 
         mediaFile = new File(Picture_path);
+
         Log.i("MyCamera", "Saved at" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
         //setPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/MyCameraApp/IMG_"+timeStamp+".jpg");
         //System.out.println(mediaFile.getAbsolutePath());
@@ -138,6 +147,10 @@ public class frontCamera extends Activity implements Serializable{
     public String getPath (){
         System.out.println("frontCamera Class : getPath method called , return : " + Picture_path);
         return Picture_path;
+    }
+
+    public Uri getPathUri(){
+        return Picture_Uri;
     }
     @Override
     public void onPause(){
