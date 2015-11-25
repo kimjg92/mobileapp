@@ -46,20 +46,21 @@ public class Password_chk extends AppCompatActivity implements Serializable{
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        //////////////////////////////
-        //이전 인텐트에서 파일 경로 받아와 메일 보내는 부분
-        filePath = getIntent().getStringExtra("Path");
-        if(!filePath.equals("null")){
-            sendGmail(filePath);
-        }
-        ////////////////////////////////
-
 
         password_error_count = 1;
 
         loadSettingsFromFile();
         getSettings();
 
+        //////////////////////////////
+        //이전 인텐트에서 파일 경로 받아와 메일 보내는 부분
+        filePath = getIntent().getStringExtra("Path");
+        if(filePath != null) {
+            if (!filePath.equals("null")) {
+                sendGmail(filePath);
+            }
+        }
+        ////////////////////////////////
         ///////////////////////////////////
         TextView settingPassword = (TextView)findViewById(R.id.showCurrentPassword);
         settingPassword.setText(my_password);
@@ -71,7 +72,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.login:
-                        if(password_error_max == password_error_count) {
+                        if(password_error_max == password_error_count && !my_password.equals(password.getText().toString())) {
                             f_camera  = new frontCamera(Password_chk.this);
                             f_camera.captureCamera();
                             loadVectorObject();
@@ -123,7 +124,7 @@ public class Password_chk extends AppCompatActivity implements Serializable{
     private void sendGmail(String filePath ){
 
 
-        GMailSender sender = new GMailSender("kimjdms", "kiki3301"); // 설정파일에서 불러오기로 고치기
+        GMailSender sender = new GMailSender(settings.getSenderEmail(), settings.getSenderEmailPassword()); // 설정파일에서 불러오기로 고치기
         System.out.println("지메일 센더 실행");
 
         GPS gps = new GPS(this);
@@ -133,28 +134,9 @@ public class Password_chk extends AppCompatActivity implements Serializable{
         double lng = location.getLongitude();
         String mailContent = "위치정보 : https://www.google.com/maps?q="+lat+","+lng+"&hl=ko&gl=kr&shorturl=1";
 
-       /////////////////////////////////////////////////////////////////////////////////////
-
-
-/*            String[] proj = { MediaStore.Images.Media.DATA };
-            Cursor cursor = managedQuery(filePath, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String testPath = cursor.getString(column_index);
-
-*/
-        /////////////////////////////////
-        try {
-            FileInputStream ois  = new FileInputStream(filePath);
-            //dFile file = ois.read();
-            ois.close();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
         File file = new File(filePath);//getOutputMediaFile(filePath);
         try {
-            sender.sendMail("Who Are You", mailContent, "kimjdms@mgmail.com", "kim_jg92@naver.com", file);
+            sender.sendMail("Who Are You", mailContent, settings.getSenderEmail()+"@gmail.com", settings.getEmail(), file);
 
             System.out.println("메일 센더 호출");
         } catch (Exception e) {

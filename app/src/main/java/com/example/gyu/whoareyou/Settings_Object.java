@@ -9,6 +9,8 @@ public class Settings_Object implements Serializable{
     private boolean useApp;
     private int PasswordCount;
     private String Email;
+    private String SenderEmail;
+    private String SenderEmailPassword;
     private boolean SendEmail;
     private String Password;
 
@@ -17,6 +19,18 @@ public class Settings_Object implements Serializable{
     }
     public boolean getUseApp(){
         return useApp;
+    }
+    public void setSenderEmail(String email){
+        SenderEmail = email;
+    }
+    public String getSenderEmail(){
+        return SenderEmail;
+    }
+    public void setSenderEmailPassword(String Password){
+        SenderEmailPassword = Password;
+    }
+    public String getSenderEmailPassword(){
+        return SenderEmailPassword;
     }
 
     public void setPasswordCount (int count){

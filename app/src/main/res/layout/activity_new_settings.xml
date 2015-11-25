@@ -80,13 +80,81 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="발신 메일 계정"
+        android:id="@+id/SenderEmailtxtView_new"
+        android:layout_alignBottom="@+id/setSenderEmail_new"
+        android:layout_alignBaseline="@+id/setSenderEmail_new"
+        android:layout_alignRight="@+id/sendEmail_new"
+        android:layout_alignEnd="@+id/sendEmail_new" />
+
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/setSenderEmail_new"
+        android:layout_below="@+id/EmailSwitch_new"
+        android:layout_alignLeft="@+id/setSenderEmailPassword_new"
+        android:layout_alignStart="@+id/setSenderEmailPassword_new"
+        android:layout_toLeftOf="@+id/GmailDotCom_new"
+        android:layout_toStartOf="@+id/GmailDotCom_new" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="\@gmail.com"
+        android:id="@+id/GmailDotCom_new"
+        android:layout_alignBottom="@+id/SenderEmailtxtView_new"
+        android:layout_alignRight="@+id/setSenderEmailPassword_new"
+        android:layout_alignEnd="@+id/setSenderEmailPassword_new" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="발신 메일 암호"
+        android:id="@+id/SenderEmailPasswordtxtView_new"
+        android:layout_alignBaseline="@+id/setSenderEmailPassword_new"
+        android:layout_alignBottom="@+id/setSenderEmailPassword_new"
+        android:layout_alignLeft="@+id/SenderEmailtxtView_new"
+        android:layout_alignStart="@+id/SenderEmailtxtView_new" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/setSenderEmailPassword_new"
+        android:layout_below="@+id/setSenderEmail_new"
+        android:layout_alignRight="@+id/EmailSwitch_new"
+        android:layout_alignEnd="@+id/EmailSwitch_new" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="수신 메일 계정"
+        android:id="@+id/ReciverMailtxtView_new"
+        android:layout_below="@+id/setSenderEmailPassword_new"
+        android:layout_alignLeft="@+id/SenderEmailPasswordtxtView_new"
+        android:layout_alignStart="@+id/SenderEmailPasswordtxtView_new"
+        android:layout_alignBottom="@+id/setEmail_new"
+        android:layout_alignBaseline="@+id/setEmail_new" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/setEmail_new"
-        android:layout_below="@+id/EmailSwitch_new"
+        android:layout_below="@+id/setSenderEmailPassword_new"
         android:layout_alignRight="@+id/EmailSwitch_new"
         android:layout_alignEnd="@+id/EmailSwitch_new" />
 
@@ -124,9 +192,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="새 비밀번호"
         android:id="@+id/NEWPWDtextView_new"
+        android:layout_alignBaseline="@+id/newPassword_new"
+        android:layout_alignBottom="@+id/newPassword_new"
         android:layout_alignRight="@+id/sendEmail_new"
-        android:layout_alignEnd="@+id/sendEmail_new"
-        android:layout_alignBottom="@+id/newPassword_new" />
+        android:layout_alignEnd="@+id/sendEmail_new" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -148,5 +217,8 @@
 
         android:layout_toRightOf="@+id/NPSWCHKtxtView_new"
         android:layout_toEndOf="@+id/NPSWCHKtxtView_new" />
+
+
+
 
 </RelativeLayout>

@@ -44,9 +44,9 @@ public class new_settings extends AppCompatActivity implements Serializable {
             public void onClick(View v) {
                 saveSettings();
                 printSettings();
-                if(saveCondition_passwordCount && saveCondition_Password && saveCondition_Email) {
+                if (saveCondition_passwordCount && saveCondition_Password && saveCondition_Email) {
                     saveSettingsToFile();
-                    Intent intent = new Intent (new_settings.this, Password_chk.class);
+                    Intent intent = new Intent(new_settings.this, Password_chk.class);
                     intent.putExtra("Settings", settings_object);
                     Intent service = new Intent(new_settings.this, ScreenService.class);
                     startService(service);
@@ -58,7 +58,9 @@ public class new_settings extends AppCompatActivity implements Serializable {
 
     private void printSettings(){
         System.out.println("Password Count : " + settings_object.getPasswordCount());
-        System.out.println("Email : " + settings_object.getEmail());
+        System.out.println("Sender email : " + settings_object.getSenderEmail());
+        System.out.println("Sender email Password : " + settings_object.getSenderEmailPassword());
+        System.out.println("Receiver Email : " + settings_object.getEmail());
         System.out.println("Email Send Enable : " + settings_object.getEmailEnable());
         System.out.println("Password : " + settings_object.getPassword());
         System.out.println("Save Condition Password Count : " + saveCondition_passwordCount);
@@ -85,6 +87,8 @@ public class new_settings extends AppCompatActivity implements Serializable {
         settings_object.setEmailEnable(sendEmail);
         if(isEmailValid()) {
             settings_object.setEmail(getEmail());
+            settings_object.setSenderEmail(getSenderEmail());
+            settings_object.setSenderEmailPassword(getSenderEmailPassword());
             saveCondition_Email = true;
         } else {
             saveCondition_Email = false;
@@ -106,27 +110,61 @@ public class new_settings extends AppCompatActivity implements Serializable {
 
 
     }
+    private String getSenderEmail(){
+        EditText editText = (EditText)findViewById(R.id.setSenderEmail_new);
+        return editText.getText().toString();
+    }
+    private String getSenderEmailPassword(){
+        EditText editText = (EditText)findViewById(R.id.setSenderEmailPassword_new);
+        return  editText.getText().toString();
+    }
     private String getEmail(){
         EditText editText = (EditText) findViewById(R.id.setEmail_new);
         return editText.getText().toString();
     }
 
     private Boolean isEmailValid(){
-        if(sendEmail == true && getEmail().toString().equals("")){
+        Boolean SenderEmail = true;
+        Boolean SenderPassword = true;
+        Boolean ReceiverEmail = true;
+        if(sendEmail == true){
+            if(getSenderEmail().toString().equals("")){
+                Toast.makeText(getApplication(), "Enter the Sender Email", Toast.LENGTH_SHORT).show();
+                SenderEmail = false;
+            }
+            if(getSenderEmailPassword().toString().equals("")){
+                Toast.makeText(getApplication(), "Enter the Sender Email Password", Toast.LENGTH_SHORT).show();
+                SenderPassword = false;
+            }
+            if(getEmail().toString().equals("")){
+                Toast.makeText(getApplication(), "Enter the Receiver Email", Toast.LENGTH_SHORT).show();
+                ReceiverEmail = false;
+            }
+        }
+        if(sendEmail == false){
+            return true;
+        } else return sendEmail == true && SenderEmail && SenderPassword && ReceiverEmail;
+
+        /*if(sendEmail == true && getEmail().toString().equals("") && getSenderEmail().toString().equals("") && getSenderEmailPassword().toString().equals("")){
+            return true;
+        } else if(sendEmail == false){
+            return true;
+        } else {
+            return false;
+        }*/
+        /*if(sendEmail == true && getEmail().toString().equals("") && getSenderEmail().toString().equals("") && getSenderEmailPassword().toString().equals("")){
             //Toast.makeText(getApplication(), "Email check Condition 1", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (sendEmail == true && !getEmail().toString().equals("")){
+        } else if (sendEmail == true && !getEmail().toString().equals("") && !getSenderEmail().toString().equals("") && !getSenderEmailPassword().toString().equals("")){
            // Toast.makeText(getApplication(), "Email check Condition 2", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (sendEmail == false && !getEmail().toString().equals("")){
+        } else if (sendEmail == false && !getEmail().toString().equals("") && !getSenderEmail().toString().equals("") && !getSenderEmailPassword().toString().equals("")){
            // Toast.makeText(getApplication(), "Email check Condition 3", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (sendEmail == false && getEmail().toString().equals("")){
+        } else if (sendEmail == false && getEmail().toString().equals("") && getSenderEmail().toString().equals("") && getSenderEmailPassword().toString().equals("")){
           //  Toast.makeText(getApplication(), "Email check Condition 4", Toast.LENGTH_SHORT).show();
             return true;
-        }
-        Toast.makeText(getApplication(), "Email check error", Toast.LENGTH_SHORT).show();
-        return false;
+        }*/
     }
 
     private String getNewPassword(){
@@ -155,14 +193,26 @@ public class new_settings extends AppCompatActivity implements Serializable {
     }
     private void setSwitchListener (){
         Emailswitch = (Switch) findViewById(R.id.EmailSwitch_new);
+        final EditText SenderEmail = (EditText) findViewById(R.id.setSenderEmail_new);
+        final EditText SenderEmailPassword = (EditText) findViewById(R.id.setSenderEmailPassword_new);
+        final EditText ReceiverEmail = (EditText) findViewById(R.id.setEmail_new);
+        SenderEmail.setEnabled(false);
+        SenderEmailPassword.setEnabled(false);
+        ReceiverEmail.setEnabled(false);
         Emailswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     sendEmail = true;
+                    SenderEmail.setEnabled(true);
+                    SenderEmailPassword.setEnabled(true);
+                    ReceiverEmail.setEnabled(true);
                     Toast.makeText(getApplication(), "Send Email Enabled " + sendEmail, Toast.LENGTH_SHORT).show();
                 } else {
                     sendEmail = false;
+                    SenderEmail.setEnabled(false);
+                    SenderEmailPassword.setEnabled(false);
+                    ReceiverEmail.setEnabled(false);
                     Toast.makeText(getApplication(),"Send Email Disabled "+ sendEmail, Toast.LENGTH_SHORT).show();
                 }
 
