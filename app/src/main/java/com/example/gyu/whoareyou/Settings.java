@@ -1,30 +1,11 @@
 package com.example.gyu.whoareyou;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.Toast;
+import android.app.TabActivity;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class Settings extends Activity implements Serializable{
-
+public class Settings extends TabActivity implements Serializable{
+/*
     Settings_Object settings_object;
     int passwordCount = -1;
     Switch Emailswitch;
@@ -36,6 +17,7 @@ public class Settings extends Activity implements Serializable{
     boolean saveCondition_Email = true;
     boolean saveCondition_crntPassword = false;
     boolean saveCondition_Password = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +97,7 @@ public class Settings extends Activity implements Serializable{
                         saveSettingsToFile();
 
                         Toast.makeText(getApplication(), "적용되었습니다.", Toast.LENGTH_SHORT).show();
-                        finish();
+
                     }
                 } else if (setPasswordEnable == false){
                     if(saveCondition_passwordCount && saveCondition_Email) {
@@ -128,21 +110,10 @@ public class Settings extends Activity implements Serializable{
                         saveSettingsToFile();
 
                         Toast.makeText(getApplication(), "적용되었습니다.", Toast.LENGTH_SHORT).show();
-                        finish();
+
                     }
                 }
-                /*currentPasswordCheck();
-                if(saveCondition_crntPassword == false){
-                    Toast.makeText(getApplication(), "current password incorrect", Toast.LENGTH_SHORT).show();
-                } else if(saveCondition_crntPassword == true){
-                    if(saveCondition_passwordCount && saveCondition_Password && saveCondition_Email && saveCondition_crntPassword) {
-                        saveSettingsToFile();
-                        //Intent intent = new Intent (Settings.this, actio);
-                        //intent.putExtra("Settings", settings_object);
-                        //startActivity(intent);
-                        finish();
-                    }
-                }*/
+
             }
         });
     }
@@ -439,5 +410,5 @@ public class Settings extends Activity implements Serializable{
         return super.onOptionsItemSelected(item);
     }
 
-
+*/
 }

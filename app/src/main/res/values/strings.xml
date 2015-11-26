@@ -15,4 +15,5 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_ttemp">Ttemp</string>
+    <string name="title_activity_action_log_with_tab">action_log_with_tab</string>
 </resources>
