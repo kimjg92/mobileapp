@@ -65,8 +65,8 @@ public class Action_log extends TabActivity implements Serializable{
 
 
         mTabHost = getTabHost();
-        mTabHost.addTab(mTabHost.newTabSpec("tab1").setContent(R.id.action_log).setIndicator("Tab1"));
-        mTabHost.addTab(mTabHost.newTabSpec("tab2").setContent(R.id.settings).setIndicator("Tab2"));
+        mTabHost.addTab(mTabHost.newTabSpec("Action Log").setContent(R.id.action_log).setIndicator("Action Log"));
+        mTabHost.addTab(mTabHost.newTabSpec("Settings").setContent(R.id.settings).setIndicator("Settings"));
 
 
 
@@ -261,6 +261,7 @@ public class Action_log extends TabActivity implements Serializable{
 
                 if(setPasswordEnable == true){
                     currentPasswordCheck();
+                    newPasswordCheck();
                     if(saveCondition_passwordCount && saveCondition_Email && saveCondition_Password && saveCondition_crntPassword){
                         //setActivateApplication();
                         ActivateApplication();
@@ -406,16 +407,19 @@ public class Action_log extends TabActivity implements Serializable{
         setEmail();
 
         //setPassword
-        setPassword();
+        //setPassword();
 
     }
-    private void setPassword(){
+    private void newPasswordCheck(){
         if(!getNewPassword().toString().equals("") && !getNewPasswordChk().toString().equals("")) {
-            if (isNewPasswordEqual()) {
+            if (isNewPasswordEqual() && getNewPassword().length() == 4 ) {
                 settings_object.setPassword(getNewPassword());
                 saveCondition_Password = true;
-            } else {
+            } else if(!isNewPasswordEqual()){
                 Toast.makeText(getApplication(), "new Password is not Equal", Toast.LENGTH_SHORT).show();
+                saveCondition_Password = false;
+            } else if(getNewPassword().length() != 4){
+                Toast.makeText(getApplication(), "Password should be 4 numbers", Toast.LENGTH_SHORT).show();
                 saveCondition_Password = false;
             }
         } else {
@@ -423,7 +427,9 @@ public class Action_log extends TabActivity implements Serializable{
             saveCondition_Password = false;
         }
     }
-
+    private void setPassword(){
+        settings_object.setPassword(getNewPassword());
+    }
     private void setEmail(){
         settings_object.setEmailEnable(sendEmail);
         if(isEmailValid()) {

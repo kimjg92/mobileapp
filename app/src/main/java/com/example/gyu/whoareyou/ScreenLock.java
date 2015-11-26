@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,22 +54,20 @@ public class ScreenLock extends Activity implements Serializable{
 
         loadSettingsFromFile();
         getSettings();
-
-        //////////////////////////////
-        //이전 인텐트에서 파일 경로 받아와 메일 보내는 부분
-        filePath = getIntent().getStringExtra("Path");
-        if(filePath != null) {
-            if (!filePath.equals("null")) {
-                sendGmail(filePath);
+        if(settings.getEmailEnable()==true) {
+            filePath = getIntent().getStringExtra("Path");
+            if (filePath != null) {
+                if (!filePath.equals("null")) {
+                    sendGmail(filePath);
+                }
             }
         }
-        ////////////////////////////////
-        ///////////////////////////////////
-        TextView settingPassword = (TextView)findViewById(R.id.showCurrentPassword);
-        settingPassword.setText(my_password);
-        //////////////////////////////////
+        passwordUI();
 
-        Button login = (Button)findViewById(R.id.login);
+
+
+
+      /*  Button login = (Button)findViewById(R.id.login);
         Button.OnClickListener listener = new Button.OnClickListener() {
 
             public void onClick(View v) {
@@ -97,7 +95,7 @@ public class ScreenLock extends Activity implements Serializable{
                 }
             }
         };
-        login.setOnClickListener(listener);
+        login.setOnClickListener(listener);*/
     }
 
     @Override
@@ -121,7 +119,84 @@ public class ScreenLock extends Activity implements Serializable{
 
         return super.onOptionsItemSelected(item);
     }
+    private void passwordUI(){
+        final ImageView iv1 = (ImageView)findViewById(R.id.imageView1);
+        final ImageView iv2 = (ImageView)findViewById(R.id.imageView2);
+        final ImageView iv3 = (ImageView)findViewById(R.id.imageView3);
+        final ImageView iv4 = (ImageView)findViewById(R.id.imageView4);
+        EditText edit = (EditText)findViewById(R.id.password);
+        edit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                switch (s.length()){
+                    case 0 :
+                        iv1.setImageResource(R.drawable.blank);
+                        iv2.setImageResource(R.drawable.blank);
+                        iv3.setImageResource(R.drawable.blank);
+                        iv4.setImageResource(R.drawable.blank);
+                        break;
+                    case 1 :
+                        iv1.setImageResource(R.drawable.mark);
+                        iv2.setImageResource(R.drawable.blank);
+                        iv3.setImageResource(R.drawable.blank);
+                        iv4.setImageResource(R.drawable.blank);
+                        break;
+                    case 2 :
+                        iv1.setImageResource(R.drawable.mark);
+                        iv2.setImageResource(R.drawable.mark);
+                        iv3.setImageResource(R.drawable.blank);
+                        iv4.setImageResource(R.drawable.blank);
+                        break;
+                    case 3 :
+                        iv1.setImageResource(R.drawable.mark);
+                        iv2.setImageResource(R.drawable.mark);
+                        iv3.setImageResource(R.drawable.mark);
+                        iv4.setImageResource(R.drawable.blank);
+                        break;
+                    case 4 :
+                        iv1.setImageResource(R.drawable.mark);
+                        iv2.setImageResource(R.drawable.mark);
+                        iv3.setImageResource(R.drawable.mark);
+                        iv4.setImageResource(R.drawable.mark);
+                        passwordCheck();
+                        break;
+                }
+
+            }
+        });
+
+    }
+    private void passwordCheck(){
+        EditText password = (EditText)findViewById(R.id.password);
+        if(password_error_max == password_error_count && !my_password.equals(password.getText().toString())) {
+            f_camera  = new frontCamera(ScreenLock.this);
+            f_camera.captureCamera();
+            loadVectorObject();
+            saveInfo(f_camera.getPath());
+            saveVectorObject();
+            //password_error_count = 1;<- 계속틀리는경우 계속 카메라 촬영을 할것인가?
+            System.out.println("Password_chk class : action_log_object size : "+action_log_object.size());
+            //sendGmail(f_camera.getPath());
+            password.setText(null);
+            Intent intent =new Intent(ScreenLock.this, ScreenLock.class);
+            intent.putExtra("Path", f_camera.getPath());
+            startActivity(intent);
+        }
+        if(my_password.equals(password.getText().toString())) {
+            finish();
+        } else {
+            password_error_count++;
+            password.setText(null);
+        }
+    }
     private void sendGmail( String filePath ){
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

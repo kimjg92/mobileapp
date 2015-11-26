@@ -174,7 +174,8 @@
         android:id="@+id/newPassword_new"
         android:layout_alignRight="@+id/EmailSwitch_new"
         android:layout_alignEnd="@+id/EmailSwitch_new"
-        android:layout_below="@+id/setPassword_new" />
+        android:layout_below="@+id/setPassword_new"
+        android:maxLength="4"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -184,7 +185,8 @@
         android:id="@+id/newPasswordChk_new"
         android:layout_below="@+id/newPassword_new"
         android:layout_alignRight="@+id/EmailSwitch_new"
-        android:layout_alignEnd="@+id/EmailSwitch_new"/>
+        android:layout_alignEnd="@+id/EmailSwitch_new"
+        android:maxLength="4"/>
 
     <TextView
         android:layout_width="wrap_content"

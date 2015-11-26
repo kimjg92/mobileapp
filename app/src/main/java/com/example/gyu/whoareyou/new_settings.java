@@ -44,6 +44,7 @@ public class new_settings extends Activity implements Serializable {
             public void onClick(View v) {
                 saveSettings();
                 printSettings();
+                newPasswordCheck();
                 if (saveCondition_passwordCount && saveCondition_Password && saveCondition_Email) {
                     saveSettingsToFile();
                     Intent intent = new Intent(new_settings.this, Password_chk.class);
@@ -67,6 +68,23 @@ public class new_settings extends Activity implements Serializable {
         System.out.println("Save Condition Email : " + saveCondition_Email);
         System.out.println("Save Condition Password : " + saveCondition_Password);
 
+    }
+    private void newPasswordCheck(){
+        if(!getNewPassword().toString().equals("") && !getNewPasswordChk().toString().equals("")) {
+            if (isNewPasswordEqual() && getNewPassword().length() == 4 ) {
+                settings_object.setPassword(getNewPassword());
+                saveCondition_Password = true;
+            } else if(!isNewPasswordEqual()){
+                Toast.makeText(getApplication(), "new Password is not Equal", Toast.LENGTH_SHORT).show();
+                saveCondition_Password = false;
+            } else if(getNewPassword().length() != 4){
+                Toast.makeText(getApplication(), "Password should be 4 numbers", Toast.LENGTH_SHORT).show();
+                saveCondition_Password = false;
+            }
+        } else {
+            Toast.makeText(getApplication(), "Enter the Password", Toast.LENGTH_SHORT).show();
+            saveCondition_Password = false;
+        }
     }
 
     private void saveSettings(){
@@ -95,19 +113,7 @@ public class new_settings extends Activity implements Serializable {
         }
 
         //setPassword
-        if(!getNewPassword().toString().equals("") && !getNewPasswordChk().toString().equals("")) {
-            if (isNewPasswordEqual()) {
-                settings_object.setPassword(getNewPassword());
-                saveCondition_Password = true;
-            } else {
-                Toast.makeText(getApplication(), "new Password is not Equal", Toast.LENGTH_SHORT).show();
-                saveCondition_Password = false;
-            }
-        } else {
-            Toast.makeText(getApplication(), "Enter the Password", Toast.LENGTH_SHORT).show();
-            saveCondition_Password = false;
-        }
-
+         settings_object.setPassword(getNewPassword());
 
     }
     private String getSenderEmail(){

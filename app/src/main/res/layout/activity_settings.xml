@@ -14,11 +14,29 @@
 
     <TextView
         android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Who Are You 사용"
+        android:id="@+id/ActivteApp"
+        android:layout_below="@+id/scrollView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/useApp"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_alignRight="@+id/newPasswordChk"
+        android:layout_alignEnd="@+id/newPasswordChk" />
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="비밀번호 오류 회수"
         android:id="@+id/passwordSetting"
-        android:layout_below="@+id/scrollView"
+        android:layout_below="@+id/ActivteApp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -63,20 +81,18 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="65dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="E-Mail로 보내기"
         android:id="@+id/sendEmail"
-        android:layout_alignTop="@+id/EmailSwitch"
-
-        />
+        android:layout_below="@+id/passwordSetting"
+        android:gravity="bottom"/>
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/EmailSwitch"
-        android:layout_marginTop="70dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/sendEmail"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -92,11 +108,12 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="비밀번호 설정"
         android:id="@+id/setPassword"
-        android:layout_below="@+id/setEmail" />
+        android:layout_below="@+id/setEmail"
+        android:gravity="center"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -106,7 +123,10 @@
         android:id="@+id/currrentPassword"
         android:layout_below="@+id/setPassword"
         android:layout_alignRight="@+id/EmailSwitch"
-        android:layout_alignEnd="@+id/EmailSwitch"/>
+        android:layout_alignEnd="@+id/EmailSwitch"
+        android:maxLength="4"
+        android:layout_toRightOf="@+id/NPSWCHKtxtViewa"
+        android:layout_toEndOf="@+id/NPSWCHKtxtViewa" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -116,7 +136,10 @@
         android:id="@+id/newPassword"
         android:layout_below="@+id/currrentPassword"
         android:layout_alignRight="@+id/EmailSwitch"
-        android:layout_alignEnd="@+id/EmailSwitch"/>
+        android:layout_alignEnd="@+id/EmailSwitch"
+        android:maxLength="4"
+        android:layout_alignLeft="@+id/newPasswordChk"
+        android:layout_alignStart="@+id/newPasswordChk" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -126,50 +149,48 @@
         android:id="@+id/newPasswordChk"
         android:layout_below="@+id/newPassword"
         android:layout_alignRight="@+id/EmailSwitch"
-        android:layout_alignEnd="@+id/EmailSwitch"/>
+        android:layout_alignEnd="@+id/EmailSwitch"
+        android:maxLength="4"
+        android:layout_toRightOf="@+id/Apply"
+        android:layout_toEndOf="@+id/Apply" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="현재 비밀번호"
+        android:textSize="15dp"
         android:id="@+id/CRNTPWDtextView"
-        android:layout_alignBaseline="@+id/currrentPassword"
-        android:layout_alignBottom="@+id/currrentPassword"
-        android:layout_alignRight="@+id/sendEmail"
-        android:layout_alignEnd="@+id/sendEmail" />
+        android:layout_alignTop="@+id/currrentPassword"
+        android:layout_toLeftOf="@+id/currrentPassword"
+        android:layout_toStartOf="@+id/currrentPassword"
+        android:layout_alignBaseline="@+id/currrentPassword" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="새 비밀번호"
+        android:textSize="15dp"
         android:id="@+id/NEWPWDtextView"
         android:layout_alignBaseline="@+id/newPassword"
         android:layout_alignBottom="@+id/newPassword"
-        android:layout_alignLeft="@+id/CRNTPWDtextView"
-        android:layout_alignStart="@+id/CRNTPWDtextView" />
+        android:layout_alignEnd="@+id/CRNTPWDtextView"
+        android:layout_alignRight="@+id/CRNTPWDtextView" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="비밀번호 확인"
-        android:id="@+id/NPSWCHKtxtView"
-        android:layout_alignBaseline="@+id/newPasswordChk"
-        android:layout_alignBottom="@+id/newPasswordChk"
-        android:layout_alignRight="@+id/sendEmail"
-        android:layout_alignEnd="@+id/sendEmail" />
+        android:textSize="15dp"
+        android:id="@+id/NPSWCHKtxtViewa"
+        android:layout_below="@+id/newPassword"
+        android:layout_toLeftOf="@+id/newPasswordChk"
+        android:layout_toStartOf="@+id/newPasswordChk"
+        android:layout_alignBaseline="@+id/newPasswordChk" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="적용"
-        android:id="@+id/Apply"
-        android:layout_below="@+id/NPSWCHKtxtView"
 
-        android:layout_toRightOf="@+id/NPSWCHKtxtView"
-        android:layout_toEndOf="@+id/NPSWCHKtxtView" />
 
     <TableRow
         android:layout_width="match_parent"
@@ -186,27 +207,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/passwordSettingEnable"
-        android:layout_below="@+id/setEmail"
+        android:layout_above="@+id/currrentPassword"
         android:layout_alignLeft="@+id/EmailSwitch"
         android:layout_alignStart="@+id/EmailSwitch" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Who Are You 사용"
-        android:id="@+id/textView"
-        android:layout_below="@+id/Apply"
-        android:layout_marginTop="49dp"
-        android:layout_alignRight="@+id/passwordSetting"
-        android:layout_alignEnd="@+id/passwordSetting" />
+        android:text="적용"
+        android:id="@+id/Apply"
+        android:layout_below="@+id/newPasswordChk"
+        android:layout_toRightOf="@+id/sendEmail"
+        android:layout_toEndOf="@+id/sendEmail"
+        android:layout_marginTop="48dp" />
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/useApp"
-        android:layout_alignBottom="@+id/textView"
-        android:layout_alignRight="@+id/newPasswordChk"
-        android:layout_alignEnd="@+id/newPasswordChk" />
 
 </RelativeLayout>
