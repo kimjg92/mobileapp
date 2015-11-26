@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,8 +30,13 @@ public class Action_log_Content extends FragmentActivity {
         setContentView(R.layout.activity_action_log_content);
         Intent intent = getIntent();
         action_log_object = (Action_log_Object)intent.getExtras().getSerializable("Content");
-        ImageView imageView = (ImageView)findViewById(R.id.imageView);
-        imageView.setImageBitmap(loadPicture(action_log_object.picture_object.get_Path()));
+        ImageView imageView = (ImageView)findViewById(R.id.pictureView);
+        imageView.setImageBitmap(BitmapFactory.decodeFile(action_log_object.picture_object.get_Path()));
+
+        TextView Addr = (TextView)findViewById(R.id.Address);
+        TextView time = (TextView)findViewById(R.id.Time);
+        Addr.setText("    "+action_log_object.Addr);
+        time.setText("    "+action_log_object.time);
 
         map = ((SupportMapFragment)  getSupportFragmentManager().findFragmentById(R.id.mapView)).getMap();
         setMarker(action_log_object.location_object.getLatitude(),action_log_object.location_object.getLongitude());

@@ -5,7 +5,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:textSize="20dp"
         android:layout_weight="0.03"
         android:text="Who Are You?"
         android:id="@+id/WhoAreYou"
@@ -15,25 +16,47 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
+        android:id="@+id/pictureView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_weight="0.2" />
+      />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:textSize="20dp"
         android:layout_weight="0.03"
         android:text="Where Are You?"
         android:id="@+id/Location"
         android:textColor="@android:color/black"
+        android:gravity="bottom"
+        />
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:textSize="10dp"
+        android:layout_weight="0.03"
+        android:id="@+id/Time"
+        android:textColor="@android:color/darker_gray"
+        android:layout_below="@+id/Location"
+        />
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:textSize="10dp"
+        android:layout_weight="0.03"
+        android:id="@+id/Address"
+        android:textColor="@android:color/darker_gray"
+        android:layout_below="@+id/Time"
         />
 
     <fragment
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.5"
+        android:layout_weight="20"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:id="@+id/mapView"
         android:layout_alignParentBottom="true"

@@ -2,10 +2,7 @@ package com.example.gyu.whoareyou;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,14 +25,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
 
 public class Action_log extends TabActivity implements Serializable{
     ArrayList<Action_log_Object> action_log_object = new ArrayList<>();
@@ -112,23 +106,8 @@ public class Action_log extends TabActivity implements Serializable{
 
     private void createListView (){
         ArrayList<String> TextList = new ArrayList<>();
-        Geocoder geocoder = new Geocoder(this, Locale.KOREA);
-
         for (int i = 0 ; i < action_log_object.size() ; i ++){
-            double lat = action_log_object.get(i).location_object.getLatitude();
-            double lng = action_log_object.get(i).location_object.getLongitude();
-            List<Address> address;
-            try {
-                if (geocoder != null) {
-                    address = geocoder.getFromLocation(lat, lng, 1);
-                    if (address != null && address.size() > 0) {
-                        action_log_object.get(i).Addr = address.get(0).getAddressLine(0).toString();
-                    }
-                }
-            } catch (IOException e) {
-                Log.e("Action_Log","주소를 찾지 못하였습니다.");
-                e.printStackTrace();
-            }
+
             TextList.add(action_log_object.get(i).Addr);
             Collections.reverse(TextList);
         }

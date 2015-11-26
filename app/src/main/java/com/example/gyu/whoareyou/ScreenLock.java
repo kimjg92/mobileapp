@@ -2,13 +2,18 @@ package com.example.gyu.whoareyou;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -16,10 +21,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by GYU on 2015-11-25.
@@ -33,12 +43,14 @@ public class ScreenLock extends Activity implements Serializable{
     private int password_error_max; // 후에 설정 값으로 수정할 것
     private boolean SendEmail;
     private String Email;
-    private String my_password;// 후에 설정한 비밀번호로 수정할 것
+    private String my_password; // 후에 설정한 비밀번호로 수정할 것
     private String filePath;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -120,10 +132,10 @@ public class ScreenLock extends Activity implements Serializable{
         return super.onOptionsItemSelected(item);
     }
     private void passwordUI(){
-        final ImageView iv1 = (ImageView)findViewById(R.id.imageView1);
-        final ImageView iv2 = (ImageView)findViewById(R.id.imageView2);
-        final ImageView iv3 = (ImageView)findViewById(R.id.imageView3);
-        final ImageView iv4 = (ImageView)findViewById(R.id.imageView4);
+        final ImageView iv1 = (ImageView)findViewById(R.id.mark1);
+        final ImageView iv2 = (ImageView)findViewById(R.id.mark2);
+        final ImageView iv3 = (ImageView)findViewById(R.id.mark3);
+        final ImageView iv4 = (ImageView)findViewById(R.id.mark4);
         EditText edit = (EditText)findViewById(R.id.password);
         edit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -260,6 +272,23 @@ public class ScreenLock extends Activity implements Serializable{
 
         GPS gps = new GPS(this);
         Location location = gps.getLocation();
+
+        Geocoder geocoder = new Geocoder(this, Locale.KOREA);
+
+        List<Address> address;
+        try {
+            if (geocoder != null) {
+                address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                if (address != null && address.size() > 0) {
+                    temp.Addr= address.get(0).getAddressLine(0).toString();
+                }
+            }
+        } catch (IOException e) {
+            Log.e("Action_Log", "주소를 찾지 못하였습니다.");
+            e.printStackTrace();
+        }
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date());
+        temp.time = timeStamp;
         temp.location_object.setLocation(location.getLatitude(), location.getLongitude());
         action_log_object.add(temp);
     }
