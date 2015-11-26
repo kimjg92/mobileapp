@@ -22,11 +22,14 @@
         android:id="@+id/listView"
         android:layout_below="@+id/btn_settings"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:listSelector="#e6e6e6"
+        android:textColor="#000000"/>
     <TextView
         android:id="@+id/textview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textColor="#000000"/>
 
 </RelativeLayout>

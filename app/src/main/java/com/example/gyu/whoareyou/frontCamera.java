@@ -1,11 +1,11 @@
 package com.example.gyu.whoareyou;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,7 +20,7 @@ import java.util.Date;
 /**
  * Created by GYU on 2015-11-06.
  */
-public class frontCamera extends Activity implements Serializable{
+public class frontCamera extends AppCompatActivity implements Serializable{
     String TAG = "CAMERA";
     private Context mContext;
     private Camera mCamera;

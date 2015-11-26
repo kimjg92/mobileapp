@@ -1,8 +1,8 @@
 package com.example.gyu.whoareyou;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +18,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class new_settings extends AppCompatActivity implements Serializable {
+public class new_settings extends Activity implements Serializable {
 
     Settings_Object settings_object;
     int passwordCount = -1;

@@ -1,8 +1,8 @@
 package com.example.gyu.whoareyou;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +23,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class Settings extends AppCompatActivity implements Serializable{
+public class Settings extends Activity implements Serializable{
 
     Settings_Object settings_object;
     int passwordCount = -1;
@@ -114,6 +114,7 @@ public class Settings extends AppCompatActivity implements Serializable{
 
                         saveSettingsToFile();
 
+                        Toast.makeText(getApplication(), "적용되었습니다.", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 } else if (setPasswordEnable == false){
@@ -126,6 +127,7 @@ public class Settings extends AppCompatActivity implements Serializable{
 
                         saveSettingsToFile();
 
+                        Toast.makeText(getApplication(), "적용되었습니다.", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }

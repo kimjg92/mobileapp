@@ -10,10 +10,11 @@ import java.io.Serializable;
 public class Action_log_Object extends Activity implements Serializable {
     Picture_Object picture_object;
     Location_Object location_object;
-
+    String Addr;
     public Action_log_Object (){
         picture_object = new Picture_Object();
         location_object = new Location_Object();
+        Addr = "null";
     }
 
 }

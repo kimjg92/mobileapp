@@ -1,5 +1,6 @@
 package com.example.gyu.whoareyou;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
@@ -7,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Password_chk extends AppCompatActivity implements Serializable{
+public class Password_chk extends Activity implements Serializable{
 
 
     private frontCamera f_camera;// = new frontCamera(this);

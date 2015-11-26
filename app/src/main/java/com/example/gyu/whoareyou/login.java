@@ -1,8 +1,8 @@
 package com.example.gyu.whoareyou;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
-public class login extends AppCompatActivity implements Serializable{
+public class login extends Activity implements Serializable{
     Settings_Object settings_object;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

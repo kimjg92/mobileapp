@@ -1,10 +1,10 @@
 package com.example.gyu.whoareyou;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by GYU on 2015-11-25.
  */
-public class ScreenLock extends AppCompatActivity implements Serializable{
+public class ScreenLock extends Activity implements Serializable{
 
     private frontCamera f_camera;
     private Settings_Object settings;
@@ -39,12 +39,16 @@ public class ScreenLock extends AppCompatActivity implements Serializable{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_chk);
         final EditText password = (EditText)findViewById(R.id.password);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
         password_error_count = 1;
 
 
@@ -221,6 +225,17 @@ public class ScreenLock extends AppCompatActivity implements Serializable{
             System.out.println("Password_chk Class - createSaveData Method : Exception");
         }
     }
+   /* @Override
+    protected void onUserLeaveHint(){
+        finish();
+        super.onUserLeaveHint();
+        Intent intent = new Intent(this, ScreenLock.class);
+        startActivity(intent);
+
+    }*/
+   @Override
+   public void onBackPressed() {
+   }
     @Override
     public void onPause(){
         super.onPause();
@@ -229,6 +244,7 @@ public class ScreenLock extends AppCompatActivity implements Serializable{
             f_camera.releaseCamera();
             f_camera = null;
         }
+
     }
     @Override
     public void onStop() {
@@ -237,6 +253,7 @@ public class ScreenLock extends AppCompatActivity implements Serializable{
             f_camera.releaseCamera();
             f_camera = null;
         }
+        finish();
     }
     @Override
     public void onDestroy() {
