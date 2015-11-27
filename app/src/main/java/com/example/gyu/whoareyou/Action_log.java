@@ -117,7 +117,7 @@ public class Action_log extends TabActivity implements Serializable{
             public void onItemClick(AdapterView<?> parent, View view, int position,long l_position) {
                 //position 이 순번 , 위에서부터 0,1,2...
                 Intent intent = new Intent(Action_log.this,Action_log_Content.class);
-                intent.putExtra("Content", action_log_object.get(position));
+                intent.putExtra("Content", action_log_object.get(action_log_object.size() - position));
                 startActivity(intent);
                 Toast.makeText(getApplicationContext(), "" + position, Toast.LENGTH_SHORT).show();
             }

@@ -20,16 +20,22 @@ public class login extends Activity implements Serializable{
 
         //Intent intent=new Intent(login.this,Password_chk.class);
         //startActivity(intent);
-        //setContentView(R.layout.activity_settings);
+        //setContentView(R.layout.activity_login);
+
+        //startActivity(new Intent(this, Logo.class));
+
+
         loadSettings();
         if(settings_object != null){
             String nullString = "null";
             Intent intent = new Intent(login.this, Password_chk.class);
             intent.putExtra("Path",nullString);
             startActivity(intent);
+            finish();
         } else if (settings_object == null){
             Intent intent = new Intent(login.this, new_settings.class);
             startActivity(intent);
+            finish();
         }
 
     }

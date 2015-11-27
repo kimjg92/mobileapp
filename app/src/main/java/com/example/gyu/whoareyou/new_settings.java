@@ -52,6 +52,7 @@ public class new_settings extends Activity implements Serializable {
                     Intent service = new Intent(new_settings.this, ScreenService.class);
                     startService(service);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
